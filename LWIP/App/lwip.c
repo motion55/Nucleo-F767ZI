@@ -48,6 +48,9 @@ ip4_addr_t gw;
 ip6_addr_t ip6addr;
 
 /* USER CODE BEGIN 2 */
+#if	LWIP_HTTPD
+void httpd_init(void);
+#endif
 
 /* USER CODE END 2 */
 
@@ -95,7 +98,9 @@ void MX_LWIP_Init(void)
   dhcp_start(&gnetif);
 
 /* USER CODE BEGIN 3 */
-
+#if	LWIP_HTTPD
+  httpd_init();
+#endif
 /* USER CODE END 3 */
 }
 
