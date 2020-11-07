@@ -52,7 +52,7 @@
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 /* USER CODE BEGIN PFP */
-
+void MyDelay(uint32_t Delay);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -104,16 +104,10 @@ int main(void)
     /* USER CODE BEGIN 3 */
 	  HAL_GPIO_WritePin(GPIOB, LD1_Pin|LD3_Pin, GPIO_PIN_SET);
 	  HAL_GPIO_WritePin(GPIOB, LD2_Pin, GPIO_PIN_RESET);
-	  //HAL_Delay(50);
-#ifndef FREERTOS_CONFIG_H
-	  MX_LWIP_Process();
-#endif
+	  MyDelay(100);
 	  HAL_GPIO_WritePin(GPIOB, LD1_Pin|LD3_Pin, GPIO_PIN_RESET);
 	  HAL_GPIO_WritePin(GPIOB, LD2_Pin, GPIO_PIN_SET);
-	  //HAL_Delay(50);
-#ifndef FREERTOS_CONFIG_H
-	  MX_LWIP_Process();
-#endif
+	  MyDelay(100);
   }
   /* USER CODE END 3 */
 }
@@ -179,7 +173,22 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
+void MyDelay(uint32_t Delay)
+{
+  uint32_t tickstart = HAL_GetTick();
+  uint32_t wait = Delay;
 
+  /* Add a freq to guarantee minimum wait */
+  if (wait < HAL_MAX_DELAY)
+  {
+    wait += (uint32_t)(uwTickFreq);
+  }
+
+  while ((HAL_GetTick() - tickstart) < wait)
+  {
+	  MX_LWIP_Process();
+  }
+}
 /* USER CODE END 4 */
 
 /**
